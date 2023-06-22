@@ -67,5 +67,19 @@ spec:
       image: curlimages/curl
       name: debug-network-container
 
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-team-blue1
+  namespace: team-blue
+spec:
+  containers:
+  - name: nginx1
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
+
+
 #test
 #
