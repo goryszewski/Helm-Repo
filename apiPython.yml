@@ -80,7 +80,7 @@ spec:
   - host: pyapi.autok8s.xyz
     http:
       paths:
-        - path: /python
+        - path: /
           pathType: Prefix
           backend:
             service:

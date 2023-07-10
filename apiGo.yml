@@ -49,7 +49,7 @@ spec:
   - host: goapi.autok8s.xyz
     http:
       paths:
-        - path: /go
+        - path: /
           pathType: Prefix
           backend:
             service:
