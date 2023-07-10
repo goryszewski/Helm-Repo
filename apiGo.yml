@@ -46,7 +46,7 @@ metadata:
     ingress.class: "haproxy"
 spec:
   rules:
-  - host: goryszewski.local
+  - host: goapi.autok8s.xyz
     http:
       paths:
         - path: /go
