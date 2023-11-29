@@ -12,18 +12,74 @@ metadata:
 data:
   server.py: |
     from flask import Flask
+    import redis
 
     app = Flask(__name__)
+
+    r = redis.Redis(host='redis', port=6379, decode_responses=True)
 
     @app.route('/')
     def hello_world():
         return 'Hello World - but override'
+
+    @app.route('/set/<data>')
+    def set(data):
+        r.set('rr',data )
+        return 'Set Redis data {}'.format(data)
+
+    @app.route('/get')
+    def get():
+        data = r.get('foo')
+        return 'Get Redis data {}'.format(data)
     
     if __name__ == '__main__':
         app.run()
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cp-redis-config 
+data:
+  redis-config: ''
 
 ---
 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis
+spec:
+  containers:
+    - name: redis
+      image: redis:5.04
+      command: 
+        - redis-server
+        - "/redis-master/redis.conf"
+      env:
+        - name: MASTER
+          value: "true"
+      ports:
+        - containerPort: 6379
+      resources:
+        limits:
+          cpu: "0.1"
+      volumeMounts:
+        - mountPath: /redis-master-data
+          name: data
+        - mountPath: /redis-master
+          name: config
+  volumes:
+    - name: data
+      emptyDir: {}
+    - name: config
+      configMap:
+        name: cp-redis-config
+        items:
+          - key: redis-config
+            path: redis.conf
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
