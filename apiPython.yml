@@ -22,15 +22,15 @@ data:
     def hello_world():
         return 'Hello World - but override'
 
-    @app.route('/set/<data>')
-    def set(data):
-        r.set('rr',data )
-        return 'Set Redis data {}'.format(data)
+    @app.route('/set/<key>/<data>')
+    def set(key,data):
+        r.set(key,data )
+        return 'Set Redis data {}:{}'.format(key,data)
 
-    @app.route('/get')
-    def get():
-        data = r.get('foo')
-        return 'Get Redis data {}'.format(data)
+    @app.route('/get/<key>')
+    def get(key):
+        data = r.get(key)
+        return 'Get Redis data {}:{}'.format(key,data)
     
     if __name__ == '__main__':
         app.run()
