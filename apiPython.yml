@@ -52,7 +52,7 @@ metadata:
 spec:
   containers:
     - name: redis
-      image: redis:5.04
+      image: redis:latest
       command: 
         - redis-server
         - "/redis-master/redis.conf"
@@ -98,7 +98,7 @@ spec:
     spec:
       containers:
       - name: python
-        image: mg231223/testciself-hosted
+        image: mg231223/testciself-hosted:latest
         volumeMounts:
         - name: api-test
           mountPath: "/app"
