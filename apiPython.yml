@@ -81,7 +81,7 @@ spec:
         image: mg231223/apipython:latest
         volumeMounts:
         - name: cm-api-python
-          mountPath: "/app"
+          mountPath: "/app/config"
           readOnly: true
         ports:
         - containerPort: 5000
