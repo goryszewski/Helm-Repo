@@ -8,32 +8,10 @@ metadata:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: api-test
+  name: cm-api-python
 data:
-  server.py: |
-    from flask import Flask
-    import redis
-
-    app = Flask(__name__)
-
-    r = redis.Redis(host='redis-svc', port=6379, decode_responses=True)
-
-    @app.route('/')
-    def hello_world():
-        return 'Hello World - but override'
-
-    @app.route('/set/<key>/<data>')
-    def set(key,data):
-        r.set(key,data )
-        return 'Set Redis data {}:{}'.format(key,data)
-
-    @app.route('/get/<key>')
-    def get(key):
-        data = r.get(key)
-        return 'Get Redis data {}:{}'.format(key,data)
-    
-    if __name__ == '__main__':
-        app.run()
+  config.yml: |
+    redis: redis-svc
 ---
 
 apiVersion: v1
@@ -100,17 +78,17 @@ spec:
     spec:
       containers:
       - name: python
-        image: mg231223/testciself-hosted:latest
+        image: mg231223/apipython:latest
         volumeMounts:
-        - name: api-test
+        - name: cm-api-python
           mountPath: "/app"
           readOnly: true
         ports:
         - containerPort: 5000
       volumes:
-      - name: api-test
+      - name: cm-api-python
         configMap:
-          name: api-test
+          name: cm-api-python
 
 
 ---
