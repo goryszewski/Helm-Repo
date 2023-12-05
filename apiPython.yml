@@ -13,6 +13,7 @@ data:
   redis.yml: |
     service: redis-svc
     port: 6379
+
 ---
 
 apiVersion: v1
@@ -61,6 +62,32 @@ spec:
             path: redis.conf
 
 ---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+spec:
+  containers:
+  - image: mysql:5.6
+    name: mysql
+    env:
+    - name: TMP_MYSQL_ROOT_PASSWORD
+      value: password
+    ports:
+    - containerPort: 3306
+      name: mysql
+    volumeMounts:
+    - name: mysql-tmp-storage
+      mountPath: /var/lib/mysql
+  volumes:
+  - name: mysql-tmp-storage
+    emptyDir: {}
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -93,6 +120,7 @@ spec:
 
 
 ---
+
 kind: Service
 apiVersion: v1
 metadata:
@@ -102,7 +130,9 @@ spec:
     app: python
   ports:
     - port: 5000 
+
 ---
+
 kind: Service
 apiVersion: v1
 metadata:
@@ -111,9 +141,21 @@ spec:
   selector:
     app: redis
   ports:
-    - port: 6379 
+    - port: 3306 
+
 ---
 
+kind: Service
+apiVersion: v1
+metadata:
+  name: mysql-svc
+spec:
+  selector:
+    app: mysql
+  ports:
+    - port: 6379 
+
+---
 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
