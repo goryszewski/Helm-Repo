@@ -1,0 +1,2 @@
+namespace: prod-my-app
+domain: prod.autok8s.ext

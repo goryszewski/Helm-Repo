@@ -1,0 +1,40 @@
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  namespace:  {{ .Values.namespace }}
+  name: api-test-service
+spec:
+  selector:
+    app: python
+  ports:
+    - port: 5000 
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  namespace:  {{ .Values.namespace }}
+  name: redis-svc
+spec:
+  selector:
+    app: redis
+  ports:
+    - port: 3306 
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  namespace:  {{ .Values.namespace }}
+  name: mysql-svc
+spec:
+  selector:
+    app: mysql
+  ports:
+    - port: 6379 
+
+---

@@ -1,0 +1,66 @@
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace:  {{ .Values.namespace }}
+  name: redis
+  labels:
+    app: redis
+spec:
+  containers:
+    - name: redis
+      image: redis:latest
+      command: 
+        - redis-server
+        - "/redis-master/redis.conf"
+      env:
+        - name: MASTER
+          value: "true"
+      ports:
+        - containerPort: 6379
+      resources:
+        limits:
+          cpu: "0.1"
+      volumeMounts:
+        - mountPath: /redis-master-data
+          name: data
+        - mountPath: /redis-master
+          name: config
+  volumes:
+    - name: data
+      emptyDir: {}
+    - name: config
+      configMap:
+        name: cp-redis-config
+        items:
+          - key: redis-config
+            path: redis.conf
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace:  {{ .Values.namespace }}
+  name: mysql
+  labels:
+    app: mysql
+spec:
+  containers:
+  - image: mysql:5.6
+    name: mysql
+    env:
+    - name: TMP_MYSQL_ROOT_PASSWORD
+      value: password
+    ports:
+    - containerPort: 3306
+      name: mysql
+    volumeMounts:
+    - name: mysql-tmp-storage
+      mountPath: /var/lib/mysql
+  volumes:
+  - name: mysql-tmp-storage
+    emptyDir: {}
+
+---

@@ -1,0 +1,24 @@
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace:  {{ .Values.namespace }}
+  name: api-test-service-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    ingress.class: "haproxy"
+spec:
+  rules:
+  - host: api.{{ .Values.domain }}
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: api-test-service
+              port:
+                number: 5000
+
+---
