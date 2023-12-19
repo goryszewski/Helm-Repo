@@ -3,7 +3,6 @@
 kind: Service
 apiVersion: v1
 metadata:
-  namespace:  {{ .Values.namespace }}
   name: api-test-service
 spec:
   selector:
@@ -16,7 +15,6 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  namespace:  {{ .Values.namespace }}
   name: redis-svc
 spec:
   selector:
@@ -29,7 +27,6 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  namespace:  {{ .Values.namespace }}
   name: mysql-svc
 spec:
   selector:

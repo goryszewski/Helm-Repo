@@ -3,7 +3,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace:  {{ .Values.namespace }}
   name: python-deployment
   labels:
     app: python
@@ -19,7 +18,7 @@ spec:
     spec:
       containers:
       - name: python
-        image: mg231223/apipython:latest
+        image: {{ .Values.api.image }}
         volumeMounts:
         - name: cm-api-python
           mountPath: "/app/config"

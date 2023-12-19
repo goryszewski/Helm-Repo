@@ -1,1 +1,2 @@
-namespace: prod-my-app
+api:
+  image: mg231223/apipython:latest
