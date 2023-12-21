@@ -8,7 +8,19 @@ spec:
   selector:
     app: python
   ports:
-    - port: 5000 
+    - port: 5000
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: ui-test-service
+spec:
+  selector:
+    app: front-ui
+  ports:
+    - port: 8080
 
 ---
 
@@ -20,7 +32,7 @@ spec:
   selector:
     app: redis
   ports:
-    - port: 3306 
+    - port: 3306
 
 ---
 
@@ -32,6 +44,6 @@ spec:
   selector:
     app: mysql
   ports:
-    - port: 6379 
+    - port: 6379
 
 ---

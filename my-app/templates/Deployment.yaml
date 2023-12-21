@@ -31,3 +31,28 @@ spec:
           name: cm-api-python
 
 ---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-ui-deployment
+  labels:
+    app: front-ui
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: front-ui
+  template:
+    metadata:
+      labels:
+        app: front-ui
+    spec:
+      containers:
+      - name: front-ui
+        image: {{ .Values.ui.image }}
+        ports:
+        - containerPort: 8080
+
+
+---

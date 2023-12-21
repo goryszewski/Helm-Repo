@@ -5,9 +5,9 @@ kind: RuntimeClass
 metadata:
   # The name the RuntimeClass will be referenced by.
   # RuntimeClass is a non-namespaced resource.
-  name: isolate 
+  name: isolate
 # The name of the corresponding CRI configuration
-handler: runsc 
+handler: runsc
 
 ---
 apiVersion: v1

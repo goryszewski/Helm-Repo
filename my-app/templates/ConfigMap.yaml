@@ -14,7 +14,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cp-redis-config 
+  name: cp-redis-config
 data:
   redis-config: ''
 

@@ -1,2 +1,3 @@
 api:
   image: mg231223/apipython:latest
+  ui: repo.internal:5000/webui:latest

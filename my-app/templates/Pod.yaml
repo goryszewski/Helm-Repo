@@ -10,7 +10,7 @@ spec:
   containers:
     - name: redis
       image: redis:latest
-      command: 
+      command:
         - redis-server
         - "/redis-master/redis.conf"
       env:
