@@ -3,4 +3,4 @@ api:
 ui:
   image: repo.internal:5000/webui:latest
 mysql:
-  password: tmp_pass
+  password: dG1wX3Bhc3MK
