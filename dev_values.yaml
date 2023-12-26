@@ -1,3 +1,0 @@
-domain: dev.autok8s.ext
-api:
-  image: repo.internal:5000/apipython:latest
