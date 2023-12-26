@@ -1,5 +1,4 @@
 ---
-
 apiVersion: v1
 kind: Pod
 metadata:
@@ -37,7 +36,6 @@ spec:
             path: redis.conf
 
 ---
-
 apiVersion: v1
 kind: Pod
 metadata:
@@ -46,19 +44,23 @@ metadata:
     app: mysql
 spec:
   containers:
-  - image: mysql:5.6
-    name: mysql
-    env:
-    - name: TMP_MYSQL_ROOT_PASSWORD
-      value: password
-    ports:
-    - containerPort: 3306
+    - image: mysql:5.6
       name: mysql
-    volumeMounts:
-    - name: mysql-tmp-storage
-      mountPath: /var/lib/mysql
+      env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-root-password
+              key: MYSQL_ROOT_PASSWORD
+      ports:
+        - containerPort: 3306
+          name: mysql
+      volumeMounts:
+        - name: mysql-tmp-storage
+          mountPath: /var/lib/mysql
   volumes:
-  - name: mysql-tmp-storage
-    emptyDir: {}
+    - name: mysql-tmp-storage
+      emptyDir: {}
 
 ---
+
