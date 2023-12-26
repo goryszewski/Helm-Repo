@@ -1,5 +1,6 @@
 api:
   image: mg231223/apipython:latest
-  ui: repo.internal:5000/webui:latest
+ui:
+  image: repo.internal:5000/webui:latest
 mysql:
   password: tmp_pass
