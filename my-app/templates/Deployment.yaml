@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: python
-          image: { { .Values.api.image } }
+          image: {{ .Values.api.image }}
           volumeMounts:
             - name: cm-api-python
               mountPath: "/app/config"
@@ -48,8 +48,9 @@ spec:
     spec:
       containers:
         - name: front-ui
-          image: { { .Values.ui.image } }
+          image: {{ .Values.ui.image }}
           ports:
             - containerPort: 80
 
 ---
+
