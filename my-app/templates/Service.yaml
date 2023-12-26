@@ -1,5 +1,4 @@
 ---
-
 kind: Service
 apiVersion: v1
 metadata:
@@ -11,7 +10,6 @@ spec:
     - port: 5000
 
 ---
-
 kind: Service
 apiVersion: v1
 metadata:
@@ -20,10 +18,9 @@ spec:
   selector:
     app: front-ui
   ports:
-    - port: 8080
+    - port: 80
 
 ---
-
 kind: Service
 apiVersion: v1
 metadata:
@@ -35,7 +32,6 @@ spec:
     - port: 3306
 
 ---
-
 kind: Service
 apiVersion: v1
 metadata:

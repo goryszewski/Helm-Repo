@@ -1,5 +1,4 @@
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,21 +16,20 @@ spec:
         app: python
     spec:
       containers:
-      - name: python
-        image: {{ .Values.api.image }}
-        volumeMounts:
-        - name: cm-api-python
-          mountPath: "/app/config"
-          readOnly: true
-        ports:
-        - containerPort: 5000
+        - name: python
+          image: { { .Values.api.image } }
+          volumeMounts:
+            - name: cm-api-python
+              mountPath: "/app/config"
+              readOnly: true
+          ports:
+            - containerPort: 5000
       volumes:
-      - name: cm-api-python
-        configMap:
-          name: cm-api-python
+        - name: cm-api-python
+          configMap:
+            name: cm-api-python
 
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -49,10 +47,9 @@ spec:
         app: front-ui
     spec:
       containers:
-      - name: front-ui
-        image: {{ .Values.ui.image }}
-        ports:
-        - containerPort: 8080
-
+        - name: front-ui
+          image: { { .Values.ui.image } }
+          ports:
+            - containerPort: 80
 
 ---
