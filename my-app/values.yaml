@@ -2,5 +2,7 @@ api:
   image: mg231223/apipython:latest
 ui:
   image: repo.internal:5000/webui:latest
+cj:
+  image: repo.internal:5000/backupjob:latest
 mysql:
   password: dG1wX3Bhc3MK

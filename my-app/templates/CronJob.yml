@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-sql
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: backup-sql
+              image: {{ .Values.cj.image }}
+              imagePullPolicy: IfNotPresent
+              command:
+                - /app/backup-sh.sh
+          restartPolicy: OnFailure
