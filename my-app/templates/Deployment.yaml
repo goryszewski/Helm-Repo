@@ -18,16 +18,21 @@ spec:
       containers:
         - name: python
           image: {{ .Values.api.image }}
-          volumeMounts:
-            - name: cm-api-python
-              mountPath: "/app/config"
-              readOnly: true
+          env:
+            - name: MYSQL_DB
+              value: cloud
+            - name: MYSQL_USER
+              value: root
+            - name: MYSQL_HOST
+              value: mysql
+            - name: MYSQL_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-root-password
+                  key: MYSQL_ROOT_PASSWORD
+
           ports:
             - containerPort: 5000
-      volumes:
-        - name: cm-api-python
-          configMap:
-            name: cm-api-python
 
 ---
 apiVersion: apps/v1
@@ -53,4 +58,3 @@ spec:
             - containerPort: 80
 
 ---
-
