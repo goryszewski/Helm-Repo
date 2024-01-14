@@ -17,3 +17,11 @@ data:
   redis-config: ""
 
 ---
+
+apiVersion: v!
+kind: ConfigMap
+metadata: 
+  name: sql-init
+data:
+  init.sql: |
+    CREATE DATABASE IF NOT EXISTS cloud;
