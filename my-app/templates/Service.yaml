@@ -5,7 +5,7 @@ metadata:
   name: api-test-service
 spec:
   selector:
-    app: python
+    app: python-api
   ports:
     - port: 5000
 
