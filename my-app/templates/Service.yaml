@@ -29,7 +29,7 @@ spec:
   selector:
     app: redis
   ports:
-    - port: 3306
+    - port: 6379
 
 ---
 kind: Service
@@ -40,6 +40,6 @@ spec:
   selector:
     app: mysql
   ports:
-    - port: 6379
+    - port: 3306
 
 ---

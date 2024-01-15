@@ -18,9 +18,9 @@ data:
 
 ---
 
-apiVersion: v!
+apiVersion: v1
 kind: ConfigMap
-metadata: 
+metadata:
   name: sql-init
 data:
   init.sql: |
