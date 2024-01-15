@@ -22,7 +22,7 @@ spec:
             - name: MYSQL_DB
               value: cloud
             - name: MYSQL_USER
-              value: root
+              value: cloud
             - name: MYSQL_HOST
               value: mysql-svc
             - name: MYSQL_PASS
