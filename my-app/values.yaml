@@ -5,4 +5,4 @@ ui:
 cj:
   image: repo.internal:5000/backupjob:latest
 mysql:
-  password: dG1wX3Bhc3MK
+  password: cm9vdAo=
