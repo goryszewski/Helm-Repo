@@ -26,10 +26,7 @@ spec:
             - name: MYSQL_HOST
               value: mysql-svc
             - name: MYSQL_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: mysql-root-password
-                  key: MYSQL_ROOT_PASSWORD
+              value: root
 
           ports:
             - containerPort: 5000
