@@ -41,3 +41,24 @@ spec:
                   number: 80
 
 ---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ui-test-service-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    ingress.class: "haproxy"
+spec:
+  rules:
+    - host: pma.{{ .Values.domain }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: phpmyadmin-svc
+                port:
+                  number: 80
+
+---
