@@ -69,6 +69,6 @@ spec:
     - name: mysql-data
       persistentVolumeClaim:
         claimName: mysql-data-disk
-    - name: mysql-init
+    - name: mysql-initdb
       configMap:
         name: sql-init
