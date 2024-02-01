@@ -75,3 +75,18 @@ spec:
     - name: mysql-initdb
       configMap:
         name: sql-init
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug-network-pod
+spec:
+  runtimeClassName: isolate
+  containers:
+    - command:
+        - sleep
+        - "36000"
+      image: curlimages/curl
+      name: debug-network-container
