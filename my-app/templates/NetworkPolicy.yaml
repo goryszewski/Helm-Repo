@@ -22,8 +22,8 @@ spec:
   ingress:
     - from:
         - podSelector:
-          matchLabels:
-            app: python-api
+            matchLabels:
+              app: python-api
       ports:
         - protocol: TCP
           port: 3306
