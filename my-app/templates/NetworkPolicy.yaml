@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: Drop Ingress
+  name: drop-default
 spec:
   podSelector: {}
   policyTypes:
@@ -12,7 +12,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: Allow to SQL
+  name: allow-to-sql
 spec:
   podSelector:
     matchLabels:
