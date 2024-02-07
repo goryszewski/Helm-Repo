@@ -6,3 +6,7 @@ cj:
   image: repo.internal:5000/backupjob:latest
 mysql:
   password: cm9vdAo=
+  mysql-pv-claim: ""
+
+general:
+  runtimeClassName: isolate

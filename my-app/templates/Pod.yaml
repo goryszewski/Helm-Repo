@@ -59,18 +59,18 @@ spec:
         - containerPort: 3306
           name: mysql
       volumeMounts:
-        # - name: mysql-tmp-storage
-        #   mountPath: /var/lib/mysql
-        - name: mysql-pv-storage
+        - name: mysql-storage
           mountPath: /var/lib/mysql
         - name: mysql-initdb
           mountPath: /docker-entrypoint-initdb.d
   volumes:
-    - name: mysql-tmp-storage
-      emptyDir: {}
-    - name: mysql-pv-storage
+    - name: mysql-storage
+{{ if .Values.mysql.mysql-pv-claim }}
       persistentVolumeClaim:
-        claimName: mysql-pv-claim
+        claimName: {{ .Values.mysql.mysql-pv-claim }}
+{{ else }}
+      emptyDir: {}
+{{ end }}
     - name: mysql-initdb
       configMap:
         name: sql-init
@@ -82,7 +82,9 @@ kind: Pod
 metadata:
   name: debug-network-pod
 spec:
-  runtimeClassName: isolate
+{{ if .Values.general.runtimeClassName }}
+  runtimeClassName: {{ .Values.general.runtimeClassName }}
+{{ end }}
   containers:
     - command:
         - sleep
