@@ -65,9 +65,9 @@ spec:
           mountPath: /docker-entrypoint-initdb.d
   volumes:
     - name: mysql-storage
-{{ if .Values.mysql.mysql-pv-claim }}
+{{ if .Values.mysql.mysqlPvClaim }}
       persistentVolumeClaim:
-        claimName: {{ .Values.mysql.mysql-pv-claim }}
+        claimName: {{ .Values.mysql.mysqlPvClaim }}
 {{ else }}
       emptyDir: {}
 {{ end }}
