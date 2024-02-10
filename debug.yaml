@@ -1,0 +1,5 @@
+domain: dev.autok8s.ext
+api:
+  image: repo.mgmt.autok8s.ext:5000/apipython:latest
+ui:
+  image: repo.mgmt.autok8s.ext:5000/webui:latest
