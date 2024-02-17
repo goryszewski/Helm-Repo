@@ -3,6 +3,10 @@ kind: CronJob
 metadata:
   name: backup-sql
 spec:
+  volumes:
+    - name: config
+      secret:
+        secretName: mysql-root-password
   schedule: "1 1 * * *"
   jobTemplate:
     spec:
@@ -14,4 +18,10 @@ spec:
               imagePullPolicy: IfNotPresent
               command:
                 - /app/backup-sh.sh
-          restartPolicy: OnFailure
+              volumeMounts:
+                - name: config
+                  readOnly: true
+                  mountPath: "/etc/secret-config"
+          restartPolicy: Never
+      backoffLimit: 4
+      activeDeadlineSeconds: 10
