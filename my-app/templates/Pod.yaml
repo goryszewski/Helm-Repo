@@ -85,12 +85,46 @@ spec:
 {{ if .Values.general.runtimeClassName }}
   runtimeClassName: {{ .Values.general.runtimeClassName }}
 {{ end }}
+  volumes:
+    - name: cachetoken
+      emptyDir: {}
+  initContainers:
+    - name: authorizer
+      image: curlimages/curl
+      command:
+        - curl
+        - -X
+        - POST
+        - http://10.17.3.1:8050/api/v1/auth
+        - --data-binary
+        - "{}"
+        - --header
+        - "Content-Type: application/json"
+        - -o token.json
+      env:
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: apicreds
+              key: PASSWORD
+        - name: USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: apicreds
+              key: USERNAME
+      volumeMounts:
+        - mountPath: /tmp
+          name: cachetoken
+
   containers:
     - command:
         - sleep
         - "36000"
       image: curlimages/curl
       name: debug-network-container
+      volumeMounts:
+        - mountPath: /cache
+          name: cachetoken
       resources:
         limits:
           memory: 512Mi

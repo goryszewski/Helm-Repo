@@ -7,6 +7,9 @@ cj:
 mysql:
   password: cm9vdAo=
   mysqlPvClaim: ""
+apicreds:
+  password: cm9vdAo=
+  username: cm9vdAo=
 
 general:
   runtimeClassName: isolate
