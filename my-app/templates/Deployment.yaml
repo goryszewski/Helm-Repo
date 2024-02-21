@@ -34,6 +34,27 @@ spec:
 
           ports:
             - containerPort: 5000
+              name: python-api-port
+          livenessProbe:
+            httpGet:
+              path: /
+              port: python-api-port
+              # httpHeaders:
+              # - name: Custom-Header
+              #   value: Awesome
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          readinesProbe:
+            httpGet:
+              path: /
+              port: python-api-port
+              # httpHeaders:
+              # - name: Custom-Header
+              #   value: Awesome
+            initialDelaySeconds: 10
+            periodSeconds: 3
+
+
 
 ---
 apiVersion: apps/v1
@@ -57,6 +78,25 @@ spec:
           image: {{ .Values.ui.image }}
           ports:
             - containerPort: 80
+              name: front-ui-port
+          livenessProbe:
+            httpGet:
+              path: /
+              port: front-ui-port
+              # httpHeaders:
+              # - name: Custom-Header
+              #   value: Awesome
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          readinesProbe:
+            httpGet:
+              path: /
+              port: front-ui-port
+              # httpHeaders:
+              # - name: Custom-Header
+              #   value: Awesome
+            initialDelaySeconds: 10
+            periodSeconds: 3
 
 ---
 apiVersion: apps/v1
