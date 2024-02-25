@@ -82,6 +82,8 @@ kind: Pod
 metadata:
   name: debug-network-pod
 spec:
+  serviceAccountName: manage-pod
+  # automountServiceAccountToken: true
 {{ if .Values.general.runtimeClassName }}
   runtimeClassName: {{ .Values.general.runtimeClassName }}
 {{ end }}
@@ -98,7 +100,7 @@ spec:
         - POST
         - http://10.17.3.1:8050/api/v1/auth
         - --data-binary
-        - '{"username":"$USERNAME","passowrd":"$PASSWORD"}'
+        - '{"username":$USERNAME,"passowrd":$PASSWORD}'
         - --header
         - "Content-Type: application/json"
         - -o token.json
@@ -119,8 +121,9 @@ spec:
 
   containers:
     - command:
-        - sleep
-        - "36000"
+        - 'sh'
+        - '-c'
+        - 'while true; do  echo "test"; curl -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt https://kubernetes.default.svc/api/v1/namespaces/{{ .Release.Namespace }}/pods; sleep 5; done'
       image: curlimages/curl
       name: debug-network-container
       volumeMounts:
