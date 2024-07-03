@@ -1,0 +1,8 @@
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: csi-config
+data:
+  Url: "http://10.17.3.1:8050"

@@ -1,0 +1,112 @@
+---
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-plugin
+spec:
+  selector:
+    matchLabels:
+      name: node-plugin
+  template:
+    metadata:
+      labels:
+        name: node-plugin
+    spec:
+      volumes:
+        - name: secret-csi-luks
+          secret:
+            secretName: secret-csi-luks
+        - name: csi-config
+          configMap:
+            name: csi-config
+        - name: mnt
+          hostPath:
+            path: /mnt
+        - name: device-dir
+          hostPath:
+            path: /dev
+        - name: id
+          hostPath:
+            path: /etc/hostname
+        - name: pods-vol-dir
+          hostPath:
+            path: /var/lib/kubelet
+        - name: registration-dir
+          hostPath:
+            path: /var/lib/kubelet/plugins_registry/
+            type: DirectoryOrCreate
+        - name: plugin-dir
+          hostPath:
+            path: /var/lib/kubelet/plugins/Libvirtapi/
+            type: DirectoryOrCreate
+      containers:
+      - name: csi-driver-registrar
+        securityContext:
+          privileged: true
+        image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.10.1
+        args:
+          - "--csi-address=/csi/csi.sock"
+          - "--kubelet-registration-path=/var/lib/kubelet/plugins/Libvirtapi/csi.sock"
+          - "-v=5"
+        volumeMounts:
+          - name: csi-config
+            mountPath: /etc/csi/conf.json
+          - name: plugin-dir
+            mountPath: /csi
+          - name: registration-dir
+            mountPath: /registration
+          - name: mnt
+            mountPath: /mnt
+            mountPropagation: "Bidirectional"
+          - name: pods-vol-dir
+            mountPath: /var/lib/kubelet
+            mountPropagation: "Bidirectional"
+          - name: device-dir
+            mountPath: /dev
+      - name: node-plugin
+        image: repo.mgmt.autok8s.ext:5000/csi-libvirt:latest
+        args:
+          - "--endpoint=$(CSI_ENDPOINT)"
+          - "--role=node"
+          - "--url=$(CSI_URL_API)"
+          - "--user=$(USER_API)"
+          - "--pass=$(PASS_API)"
+        env:
+          - name: "CSI_ENDPOINT"
+            value: "unix:///csi/csi.sock"
+          - name: "CSI_URL_API"
+            valueFrom:
+              configMapKeyRef:
+                name: csi-config
+                key: Url
+          - name: USER_API
+            valueFrom:
+              secretKeyRef:
+                name: secret-csi-config
+                key: Username
+          - name: PASS_API
+            valueFrom:
+              secretKeyRef:
+                name: secret-csi-config
+                key: Password
+        securityContext:
+          privileged: true
+        volumeMounts:
+          - mountPath: "/etc/luks"
+            name: secret-csi-luks
+            readOnly: true          
+          - name: csi-config
+            mountPath: /etc/csi
+          - name : id
+            mountPath: /id
+          - name: pods-vol-dir
+            mountPath: /var/lib/kubelet
+            mountPropagation: "Bidirectional"
+          - name: mnt
+            mountPath: /mnt
+            mountPropagation: "Bidirectional"
+          - name: device-dir
+            mountPath: /dev
+          - name: plugin-dir
+            mountPath: /csi

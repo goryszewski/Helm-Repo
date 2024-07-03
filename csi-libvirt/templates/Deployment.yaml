@@ -1,0 +1,86 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: csi-libvirt-deployment
+  labels:
+    app: csi-libvirt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: csi-libvirt
+  template:
+    metadata:
+      labels:
+        app: csi-libvirt
+    spec:
+      serviceAccountName: csi-libvirt-sa
+      containers:
+        - name: external-attacher
+          image: registry.k8s.io/sig-storage/csi-attacher:v4.6.0
+          args:
+            - "--csi-address=$(CSI_ENDPOINT)"
+            - "-v=5"
+          env:
+            - name: "CSI_ENDPOINT"
+              value: "unix:///sock/csi.sock"
+          volumeMounts:
+            - mountPath: /sock
+              name: sock-volume
+
+        - name: external-provisioner
+          image: registry.k8s.io/sig-storage/csi-provisioner:v5.0.0
+          args:
+            - "--csi-address=$(CSI_ENDPOINT)"
+          env:
+            - name: "CSI_ENDPOINT"
+              value: "unix:///sock/csi.sock"
+          volumeMounts:
+            - mountPath: /sock
+              name: sock-volume
+
+        - name: csi-libvirt
+          image: repo.mgmt.autok8s.ext:5000/csi-libvirt:latest
+          args: 
+            - "--endpoint=$(CSI_ENDPOINT)"
+            - "--role=controler"
+            - "--url=$(CSI_URL_API)"
+            - "--user=$(USER_API)"
+            - "--pass=$(PASS_API)"
+          env:
+            - name: "CSI_ENDPOINT"
+              value: "unix:///sock/csi.sock"
+            - name: "CSI_URL_API"
+              valueFrom:
+                configMapKeyRef:
+                  name: csi-config
+                  key: Url
+            - name: USER_API
+              valueFrom:
+                secretKeyRef:
+                  name: secret-csi-config
+                  key: Username
+            - name: PASS_API
+              valueFrom:
+                secretKeyRef:
+                  name: secret-csi-config
+                  key: Password
+          volumeMounts:          
+            - name : id
+              mountPath: /id
+            - name: csi-config
+              mountPath: /etc/csi
+            - mountPath: /sock
+              name: sock-volume
+
+      volumes:
+        - name: id
+          hostPath:
+            path: /etc/hostname
+        - name: csi-config
+          configMap:
+            name: csi-config
+        - name: sock-volume
+          emptyDir: {}
