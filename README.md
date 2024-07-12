@@ -6,6 +6,6 @@ Repository Helm
 
 # RUN
 
-helm install test ./my-app -f debug.yaml --create-namespace --namespace dev
+helm install csi-libvirt ./csi-libvirt -f debug.yaml --create-namespace --namespace csi
 
-helm uninstall test --namespace dev
+helm uninstall  csi-libvirt --namespace csi

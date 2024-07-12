@@ -43,7 +43,7 @@ spec:
 
         - name: csi-libvirt
           image: repo.mgmt.autok8s.ext:5000/csi-libvirt:latest
-          args: 
+          args:
             - "--endpoint=$(CSI_ENDPOINT)"
             - "--role=controler"
             - "--url=$(CSI_URL_API)"
@@ -67,7 +67,7 @@ spec:
                 secretKeyRef:
                   name: secret-csi-config
                   key: Password
-          volumeMounts:          
+          volumeMounts:
             - name : id
               mountPath: /id
             - name: csi-config

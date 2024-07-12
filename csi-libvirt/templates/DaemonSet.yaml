@@ -95,7 +95,7 @@ spec:
         volumeMounts:
           - mountPath: "/etc/luks"
             name: secret-csi-luks
-            readOnly: true          
+            readOnly: true
           - name: csi-config
             mountPath: /etc/csi
           - name : id
