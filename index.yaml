@@ -1,0 +1,25 @@
+apiVersion: v1
+entries:
+  csi-libvirt:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2024-07-14T20:32:34.286847995+02:00"
+    description: Custom plugin csi for kubernetes
+    digest: c693262651bccd787b80688e319c3e850715af7771d2fec068d98be7ff279a05
+    name: csi-libvirt
+    type: application
+    urls:
+    - csi-libvirt-0.1.0.tgz
+    version: 0.1.0
+  my_app:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2024-07-14T20:32:34.286988101+02:00"
+    description: A Helm chart for Kubernetes
+    digest: 1c2a474446b9f2da6ef3775773b683923f045b6c25467df5f28d105adb7e65d3
+    name: my_app
+    type: application
+    urls:
+    - my_app-0.1.0.tgz
+    version: 0.1.0
+generated: "2024-07-14T20:32:34.28647335+02:00"
