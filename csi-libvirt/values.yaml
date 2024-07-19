@@ -1,5 +1,0 @@
-csi-libvirt:
-  image: repo.mgmt.autok8s.ext:5000/csi-libvirt:latest
-
-node-plugin:
-  image: repo.mgmt.autok8s.ext:5000/csi-libvirt:latest

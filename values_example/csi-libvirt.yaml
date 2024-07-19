@@ -1,0 +1,18 @@
+General:
+  ServiceAccount:
+    Name: csi-libvirt-sa
+    NameSpace: default
+  ClusterRoleBinding:
+    Name: libvirt-sa-cluster-Binding-global
+  ClusterRole:
+    Name: libvirt-sa-cluster-role
+  Luks:
+    Secret_name: secret-csi-luks
+    Password: dGVzdHRlc3QK # develop -> testest
+
+LibvirtApi:
+  Secret_name: secret-csi-config
+  ConfigMap_name: "csi-config"
+  Url: "http://10.17.3.1:8050"
+  Username: dGVzdAo= # develop -> test
+  Password: dGVzdAo= # develop -> test

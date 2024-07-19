@@ -4,12 +4,12 @@ apiVersion: rbac.authorization.k8s.io/v1
 # This cluster role binding allows anyone in the "manager" group to read secrets in any namespace.
 kind: ClusterRoleBinding
 metadata:
-  name: libvirt-sa-cluster-Binding-global
+  name:  {{ .Values.General.ClusterRoleBinding.Name }}
 subjects:
 - kind: ServiceAccount
-  name: csi-libvirt-sa
-  namespace: default
+  name: {{ .Values.General.ServiceAccount.Name }}
+  namespace: {{ .Values.General.ServiceAccount.NameSpace }}
 roleRef:
   kind: ClusterRole
-  name: libvirt-sa-cluster-role
+  name: {{ .Values.General.ClusterRole.Name }}
   apiGroup: rbac.authorization.k8s.io

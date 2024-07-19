@@ -14,21 +14,18 @@ spec:
         name: node-plugin
     spec:
       volumes:
-        - name: secret-csi-luks
+        - name: {{ .Values.General.Luks.Secret_name }}
           secret:
-            secretName: secret-csi-luks
-        - name: csi-config
+            secretName: {{ .Values.General.Luks.Secret_name }}
+        - name: {{ .Values.LibvirtApi.ConfigMap_name }}
           configMap:
-            name: csi-config
+            name: {{ .Values.LibvirtApi.ConfigMap_name }}
         - name: mnt
           hostPath:
             path: /mnt
         - name: device-dir
           hostPath:
             path: /dev
-        - name: id
-          hostPath:
-            path: /etc/hostname
         - name: pods-vol-dir
           hostPath:
             path: /var/lib/kubelet
@@ -50,8 +47,6 @@ spec:
           - "--kubelet-registration-path=/var/lib/kubelet/plugins/Libvirtapi/csi.sock"
           - "-v=5"
         volumeMounts:
-          - name: csi-config
-            mountPath: /etc/csi/conf.json
           - name: plugin-dir
             mountPath: /csi
           - name: registration-dir
@@ -78,28 +73,26 @@ spec:
           - name: "CSI_URL_API"
             valueFrom:
               configMapKeyRef:
-                name: csi-config
+                name: {{ .Values.LibvirtApi.ConfigMap_name }}
                 key: Url
           - name: USER_API
             valueFrom:
               secretKeyRef:
-                name: secret-csi-config
+                name: {{ .Values.LibvirtApi.Secret_name }}
                 key: Username
           - name: PASS_API
             valueFrom:
               secretKeyRef:
-                name: secret-csi-config
+                name: {{ .Values.LibvirtApi.Secret_name }}
                 key: Password
         securityContext:
           privileged: true
         volumeMounts:
           - mountPath: "/etc/luks"
-            name: secret-csi-luks
+            name: {{ .Values.General.Luks.Secret_name }}
             readOnly: true
-          - name: csi-config
+          - name: {{ .Values.LibvirtApi.ConfigMap_name }}
             mountPath: /etc/csi
-          - name : id
-            mountPath: /id
           - name: pods-vol-dir
             mountPath: /var/lib/kubelet
             mountPropagation: "Bidirectional"
