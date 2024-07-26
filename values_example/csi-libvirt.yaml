@@ -16,3 +16,19 @@ LibvirtApi:
   Url: "http://10.17.3.1:8050"
   Username: dGVzdAo= # develop -> test
   Password: dGVzdAo= # develop -> test
+
+DaemonSet:
+  containers:
+    csiDriverRegistrar:
+      image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.10.1
+    nodePlugin:
+      image: repo.mgmt.autok8s.ext:5000/csi-libvirt:latest
+
+Deployment:
+  containers:
+    externalAttacher:
+      image: registry.k8s.io/sig-storage/csi-attacher:v4.6.0
+    externalProvisioner:
+      image: registry.k8s.io/sig-storage/csi-provisioner:v5.0.0
+    csiLibvirtControler:
+      image: repo.mgmt.autok8s.ext:5000/csi-libvirt:latest

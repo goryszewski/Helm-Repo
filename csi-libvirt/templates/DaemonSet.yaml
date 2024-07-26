@@ -41,7 +41,7 @@ spec:
       - name: csi-driver-registrar
         securityContext:
           privileged: true
-        image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.10.1
+        image: {{ .Values.DaemonSet.containers.csiDriverRegistrar }}
         args:
           - "--csi-address=/csi/csi.sock"
           - "--kubelet-registration-path=/var/lib/kubelet/plugins/Libvirtapi/csi.sock"
@@ -60,7 +60,7 @@ spec:
           - name: device-dir
             mountPath: /dev
       - name: node-plugin
-        image: repo.mgmt.autok8s.ext:5000/csi-libvirt:latest
+        image: {{ .Values.DaemonSet.containers.nodePlugin }}
         args:
           - "--endpoint=$(CSI_ENDPOINT)"
           - "--role=node"
