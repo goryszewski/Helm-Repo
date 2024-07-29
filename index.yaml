@@ -3,18 +3,29 @@ entries:
   csi-libvirt:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2024-07-19T22:26:55.479710709+02:00"
+    created: "2024-07-31T22:13:02.914824587+02:00"
     description: Custom plugin csi for kubernetes
-    digest: aa54eb59717d973eecb4bd4a9b307961823ef918a4335228f0587e1bc02858ac
+    digest: 7d513d99356dbdc58bc896f033ef4d0d338d754e727924c7af299575e619a9bc
     name: csi-libvirt
     type: application
     urls:
     - csi-libvirt-0.1.0.tgz
     version: 0.1.0
+  k4s:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2024-07-31T22:13:02.914958324+02:00"
+    description: A Helm chart for Kubernetes
+    digest: 4039b86c397e1aa6ee2883ac8b6a98b0ec2006b411a6af5c732b0d482d7d3e1e
+    name: k4s
+    type: application
+    urls:
+    - k4s-0.1.0.tgz
+    version: 0.1.0
   my_app:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2024-07-19T22:26:55.479860239+02:00"
+    created: "2024-07-31T22:13:02.915190741+02:00"
     description: A Helm chart for Kubernetes
     digest: 1c2a474446b9f2da6ef3775773b683923f045b6c25467df5f28d105adb7e65d3
     name: my_app
@@ -22,4 +33,4 @@ entries:
     urls:
     - my_app-0.1.0.tgz
     version: 0.1.0
-generated: "2024-07-19T22:26:55.479458231+02:00"
+generated: "2024-07-31T22:13:02.914587702+02:00"
