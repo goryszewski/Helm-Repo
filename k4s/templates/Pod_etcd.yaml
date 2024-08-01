@@ -1,85 +1,75 @@
----
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
-  name: {{ .Values.ID }}-etcd-deployment
   labels:
-    app: {{ .Values.ID }}-etcd
+    component: {{ .Values.ID }}-etcd
+  name: {{ .Values.ID }}-etcd
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: {{ .Values.ID }}-etcd
-  template:
-    metadata:
-      labels:
-        app: {{ .Values.ID }}-etcd
-    spec:
-      containers:
-        - command:
-            - etcd
-            - --cert-file=/etc/etcd/ssl/certificate-etcd.pem
-            - --key-file=/etc/etcd/ssl/certificate-etcd.key
-            - --trusted-ca-file=/etc/etcd/ssl/ETCD_CA.pem
-            - --client-cert-auth=true
-            - --data-dir=/var/lib/etcd
-            - --experimental-initial-corrupt-check=true
-            - --experimental-watch-progress-notify-interval=5s
-            - --advertise-client-urls=https://{{ .Values.ID }}-etcd:2379
-            - --initial-advertise-peer-urls=https://{{ .Values.ID }}-etcd:2380
-            - --initial-cluster={{masters | join(",")}}
-            - --listen-client-urls=https://{{ .Values.ID }}-etcd:2379,https://127.0.0.1:23799
-            - --listen-metrics-urls=http://127.0.0.1:2381
-            - --listen-peer-urls=https://{{ .Values.ID }}-etcd:2380
-            - --name={{ .Values.ID }}-etcd
-            - --peer-client-cert-auth=true
-            - --peer-cert-file=/etc/etcd/ssl/certificate-etcd.pem
-            - --peer-key-file=/etc/etcd/ssl/certificate-etcd.key
-            - --peer-trusted-ca-file=/etc/etcd/ssl/ETCD_CA.pem
-            - --snapshot-count=10000
-        - name: {{ .Values.ID }}-etcd
-          image: {{ .Values.ETCD.Deployment.containers.image }}
-          ports:
-            - containerPort: 2379
-              name: client-requests
-            - containerPort: 2380
-              name: peer-communication
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            failureThreshold: 8
-            httpGet:
-              host: 127.0.0.1
-              path: /health?exclude=NOSPACE&serializable=true
-              port: 2381
-              scheme: HTTP
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 15
-          resources:
-            requests:
-              cpu: 100m
-              memory: 100Mi
-          startupProbe:
-            failureThreshold: 24
-            httpGet:
-              host: 127.0.0.1
-              path: /health?serializable=false
-              port: 2381
-              scheme: HTTP
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 15
-          volumeMounts:
-          - mountPath: /var/lib/etcd
-            name: etcd-data
-          - mountPath: /etc/etcd/ssl
-            name: etcd-certs
-      volumes:
-      - hostPath:
-          path: /etc/etcd/ssl
-          type: DirectoryOrCreate
-        name: etcd-certs
-      - hostPath:
-          path: /var/lib/etcd
-          type: DirectoryOrCreate
+  containers:
+    - name: {{ .Values.ID }}-etcd
+      image: {{ .Values.ETCD.containers.image }}:{{ .Values.ETCD.containers.tag }}
+      command:
+        - etcd
+        - --cert-file=/etc/etcd/ssl/certificate-etcd.pem
+        - --key-file=/etc/etcd/ssl/certificate-etcd.key
+        - --trusted-ca-file=/etc/etcd/ssl/ETCD_CA.pem
+        - --client-cert-auth=true
+        - --data-dir=/var/lib/etcd
+        - --experimental-initial-corrupt-check=true
+        - --experimental-watch-progress-notify-interval=5s
+        - --advertise-client-urls=https://{{ .Values.ID }}-etcd:2379
+        - --initial-advertise-peer-urls=https://{{ .Values.ID }}-etcd:2380
+        - --initial-cluster={{masters | join(",")}}
+        - --listen-client-urls=https://{{ .Values.ID }}-etcd:2379,https://127.0.0.1:2379
+        - --listen-metrics-urls=http://127.0.0.1:2381
+        - --listen-peer-urls=https://{{ .Values.ID }}-etcd:2380
+        - --name={{ .Values.ID }}-etcd
+        - --peer-client-cert-auth=true
+        - --peer-cert-file=/etc/etcd/ssl/certificate-etcd.pem
+        - --peer-key-file=/etc/etcd/ssl/certificate-etcd.key
+        - --peer-trusted-ca-file=/etc/etcd/ssl/ETCD_CA.pem
+        - --snapshot-count=10000
+      ports:
+        - containerPort: 2379
+          name: client-requests
+        - containerPort: 2380
+          name: peer-communication
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 8
+        httpGet:
+          host: 127.0.0.1
+          path: /health?exclude=NOSPACE&serializable=true
+          port: 2381
+          scheme: HTTP
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        timeoutSeconds: 15
+      resources:
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      startupProbe:
+        failureThreshold: 24
+        httpGet:
+          host: 127.0.0.1
+          path: /health?serializable=false
+          port: 2381
+          scheme: HTTP
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        timeoutSeconds: 15
+      volumeMounts:
+      - mountPath: /var/lib/etcd
         name: etcd-data
+      - mountPath: /etc/etcd/ssl
+        name: etcd-certs
+  volumes:
+  - hostPath:
+      path: /etc/etcd/ssl
+      type: DirectoryOrCreate
+    name: etcd-certs
+  - hostPath:
+      path: /var/lib/etcd
+      type: DirectoryOrCreate
+    name: etcd-data

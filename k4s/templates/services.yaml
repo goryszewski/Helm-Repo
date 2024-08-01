@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name:  {{ .Values.ID }}-svc-etcd
+spec:
+  selector:
+    component: {{ .Values.ID }}-etcd
+  ports:
+    - protocol: TCP
+      port: 2379
+      targetPort: 2379
+    - protocol: TCP
+      port: 2380
+      targetPort: 2380
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name:  {{ .Values.ID }}-svc-kube-apiserver
+spec:
+  selector:
+    component: {{ .Values.ID }}-kube-apiserver
+  ports:
+    - protocol: TCP
+      port: 6443
+      targetPort: 6443
