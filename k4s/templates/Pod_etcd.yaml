@@ -12,7 +12,7 @@ spec:
         - etcd
         - --cert-file=/etc/etcd/ssl/certificate-etcd.pem
         - --key-file=/etc/etcd/ssl/certificate-etcd.key
-        - --trusted-ca-file=/etc/etcd/ssl/ETCD_CA.pem
+        - --trusted-ca-file=/etc/etcd/ca/ETCD_CA.pem
         - --client-cert-auth=true
         - --data-dir=/var/lib/etcd
         - --experimental-initial-corrupt-check=true
@@ -27,7 +27,7 @@ spec:
         - --peer-client-cert-auth=true
         - --peer-cert-file=/etc/etcd/ssl/certificate-etcd.pem
         - --peer-key-file=/etc/etcd/ssl/certificate-etcd.key
-        - --peer-trusted-ca-file=/etc/etcd/ssl/ETCD_CA.pem
+        - --peer-trusted-ca-file=/etc/etcd/ca/ETCD_CA.pem
         - --snapshot-count=10000
       ports:
         - containerPort: 2379
@@ -60,16 +60,18 @@ spec:
         periodSeconds: 10
         timeoutSeconds: 15
       volumeMounts:
-      - mountPath: /var/lib/etcd
-        name: etcd-data
+      - mountPath: /etc/etcd/ca
+        name: configMap
       - mountPath: /etc/etcd/ssl
-        name: etcd-certs
+        name: secret
   volumes:
-  - hostPath:
-      path: /etc/etcd/ssl
-      type: DirectoryOrCreate
-    name: etcd-certs
-  - hostPath:
-      path: /var/lib/etcd
-      type: DirectoryOrCreate
-    name: etcd-data
+  - name: secret
+    secret:
+      secretName: {{ .Values.ID }}-secret-etcd
+  - name: configMap
+    configMap:
+      name: {{ .Values.ID }}-configMap-CA
+  # - hostPath: #DOTO use pv
+  #     path: /var/lib/etcd
+  #     type: DirectoryOrCreate
+  #   name: etcd-data

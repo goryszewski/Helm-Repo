@@ -1,6 +1,12 @@
 ID: test
 
-ETCD:
+ETCD: #TODO use acme and initContainer to generate PEM/KEY
+  PEM: |
+    -----BEGIN CERTIFICATE-----
+    -----END CERTIFICATE-----
+  KEY: |
+    -----BEGIN KEY-----
+    -----END KEY-----
   containers:
     image: quay.io/coreos/etcd
     tag: v3.5.15
@@ -20,3 +26,11 @@ KubeControllerManager:
   containers:
     image: registry.k8s.io/kube-controller-manager
     tag: v1.30.2
+
+CA:
+  Kubernetes: |
+    -----BEGIN CERTIFICATE-----
+    -----END CERTIFICATE-----
+  ETCD: |
+    -----BEGIN CERTIFICATE-----
+    -----END CERTIFICATE-----

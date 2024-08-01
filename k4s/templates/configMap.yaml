@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.ID }}-CA
+data:
+  CAKubernetes.crt: {{ .Values.CA.Kubernetes }}
+  ETCD_CA.pem: {{ .Values.CA.ETCD }}
