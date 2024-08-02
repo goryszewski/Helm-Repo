@@ -2,11 +2,11 @@ apiVersion: v1
 kind: Pod
 metadata:
   labels:
-    component: {{ .Values.ID }}-etcd
-  name: {{ .Values.ID }}-etcd
+    component: {{ .Values.Id }}-etcd
+  name: {{ .Values.Id }}-etcd
 spec:
   containers:
-    - name: {{ .Values.ID }}-etcd
+    - name: {{ .Values.Id }}-etcd
       image: {{ .Values.ETCD.containers.image }}:{{ .Values.ETCD.containers.tag }}
       command:
         - etcd
@@ -17,13 +17,13 @@ spec:
         - --data-dir=/var/lib/etcd
         - --experimental-initial-corrupt-check=true
         - --experimental-watch-progress-notify-interval=5s
-        - --advertise-client-urls=https://{{ .Values.ID }}-etcd:2379
-        - --initial-advertise-peer-urls=https://{{ .Values.ID }}-etcd:2380
-        - --initial-cluster={{masters | join(",")}}
-        - --listen-client-urls=https://{{ .Values.ID }}-etcd:2379,https://127.0.0.1:2379
+        - --advertise-client-urls=https://127.0.0.1:2379
+        - --initial-advertise-peer-urls=https://127.0.0.1:2380
+        # - --initial-cluster=
+        - --listen-client-urls=https://127.0.0.1:2379,https://127.0.0.1:2379
         - --listen-metrics-urls=http://127.0.0.1:2381
-        - --listen-peer-urls=https://{{ .Values.ID }}-etcd:2380
-        - --name={{ .Values.ID }}-etcd
+        - --listen-peer-urls=https://127.0.0.1:2380
+        - --name=127.0.0.1
         - --peer-client-cert-auth=true
         - --peer-cert-file=/etc/etcd/ssl/certificate-etcd.pem
         - --peer-key-file=/etc/etcd/ssl/certificate-etcd.key
@@ -31,9 +31,9 @@ spec:
         - --snapshot-count=10000
       ports:
         - containerPort: 2379
-          name: client-requests
+          name: clients
         - containerPort: 2380
-          name: peer-communication
+          name: peers
       imagePullPolicy: IfNotPresent
       livenessProbe:
         failureThreshold: 8
@@ -61,16 +61,16 @@ spec:
         timeoutSeconds: 15
       volumeMounts:
       - mountPath: /etc/etcd/ca
-        name: configMap
+        name: configmap
       - mountPath: /etc/etcd/ssl
         name: secret
   volumes:
   - name: secret
     secret:
-      secretName: {{ .Values.ID }}-secret-etcd
-  - name: configMap
+      secretName: {{ .Values.Id }}-secret-etcd
+  - name: configmap
     configMap:
-      name: {{ .Values.ID }}-configMap-CA
+      name: {{ .Values.Id }}-configmap-ca
   # - hostPath: #DOTO use pv
   #     path: /var/lib/etcd
   #     type: DirectoryOrCreate
