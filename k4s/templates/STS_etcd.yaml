@@ -1,0 +1,85 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  labels:
+    component: {{ .Values.Id }}-etcd
+  name: {{ .Values.Id }}-etcd
+spec:
+  serviceName: etcd
+  replicas: 3
+  template:
+    metadata:
+      component: {{ .Values.Id }}-etcd
+      labels:
+        component: {{ .Values.Id }}-etcd
+    spec:
+      containers:
+        - name: {{ .Values.Id }}-etcd
+          image: {{ .Values.ETCD.containers.image }}:{{ .Values.ETCD.containers.tag }}
+          command:
+            - etcd
+            - --cert-file=/etc/etcd/ssl/certificate-etcd.pem
+            - --key-file=/etc/etcd/ssl/certificate-etcd.key
+            - --trusted-ca-file=/etc/etcd/ca/ETCD_CA.pem
+            - --client-cert-auth=true
+            - --data-dir=/var/lib/etcd
+            - --experimental-initial-corrupt-check=true
+            - --experimental-watch-progress-notify-interval=5s
+            - --advertise-client-urls=https://${HOSTNAME}:2379
+            - --initial-advertise-peer-urls=https://${HOSTNAME}:2380
+            - --initial-cluster=
+            - --listen-client-urls=https://${HOSTNAME}:2379,https://${HOSTNAME}:2379
+            - --listen-metrics-urls=http://${HOSTNAME}:2381
+            - --listen-peer-urls=https://${HOSTNAME}:2380
+            - --name=${HOSTNAME}
+            - --peer-client-cert-auth=true
+            - --peer-cert-file=/etc/etcd/ssl/certificate-etcd.pem
+            - --peer-key-file=/etc/etcd/ssl/certificate-etcd.key
+            - --peer-trusted-ca-file=/etc/etcd/ca/ETCD_CA.pem
+            - --snapshot-count=10000
+          ports:
+            - containerPort: 2379
+              name: clients
+            - containerPort: 2380
+              name: peers
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 8
+            httpGet:
+              host: 127.0.0.1
+              path: /health?exclude=NOSPACE&serializable=true
+              port: 2381
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 15
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          startupProbe:
+            failureThreshold: 24
+            httpGet:
+              host: 127.0.0.1
+              path: /health?serializable=false
+              port: 2381
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 15
+          volumeMounts:
+          - mountPath: /etc/etcd/ca
+            name: configmap
+          - mountPath: /etc/etcd/ssl
+            name: secret
+      volumes:
+      - name: secret
+        secret:
+          secretName: {{ .Values.Id }}-secret-etcd
+      - name: configmap
+        configMap:
+          name: {{ .Values.Id }}-configmap-ca
+      # - hostPath: #DOTO use pv
+      #     path: /var/lib/etcd
+      #     type: DirectoryOrCreate
+      #   name: etcd-data
