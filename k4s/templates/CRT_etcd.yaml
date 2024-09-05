@@ -1,0 +1,25 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Values.Id }}-etcd-crt
+spec:
+  secretName: {{ .Values.Id }}-etcd-sec
+  issuerRef:
+    name: libvirtacme
+    kind: Issuer
+  commonName: {{ .Values.Id }}-etcd-{{ .seq }}
+  dnsNames:
+  - {{ .Values.Id }}-etcd-{{ .seq }}
+  subject:
+    organizations:
+    - My Organization
+    organizationalUnits:
+    - My Unit
+    countries:
+    - PL
+  usages:
+  - digital signature
+  - key encipherment
+  - server auth
+  duration: 2160h  # (90 days)
+  renewBefore: 360h  # (15 days before expiry)
